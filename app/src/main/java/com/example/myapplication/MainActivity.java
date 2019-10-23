@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     Observable<String> animalsObservable = Observable.just("Ant", "Bee", "Cat", "Dog", "Fox");
     private static final String TAG = "tag";
 
+    private Disposable disposable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         return new Observer<String>() {
             @Override
             public void onSubscribe(Disposable d) {
+                disposable = d;
                 Log.d(TAG, "onSubscribe");
             }
 
@@ -53,5 +56,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "All items are emitted!");
             }
         };
+    }
+
+    @Override
+    protected void onDestroy() {
+        disposable.dispose();
+        super.onDestroy();
     }
 }
